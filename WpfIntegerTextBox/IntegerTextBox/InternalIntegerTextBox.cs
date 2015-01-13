@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace WpfIntegerTextBox.IntegerTextBox
             AddHandler(MouseDoubleClickEvent,
               new RoutedEventHandler(SelectAllText), true);
             AddHandler(LostFocusEvent, new RoutedEventHandler(HandleEmptyString));
-            
+            AddHandler(DataObject.PastingEvent, new DataObjectPastingEventHandler(OnTextBoxPasting));
             TextChanged += UpdateLastGood;
         }
 
@@ -31,6 +32,22 @@ namespace WpfIntegerTextBox.IntegerTextBox
         {
             base.OnPreviewTextInput(e);
             e.Handled = IsValidNumber(e.Text) == false;
+        }
+
+        protected void OnTextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(string)))
+            {
+                var text = (string)e.DataObject.GetData(typeof(string));
+                if (IsValidNumber(text) == false)
+                {
+                    e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
         }
 
         private static readonly Regex OnlyNumbersRegext = new Regex(@"\d+");
