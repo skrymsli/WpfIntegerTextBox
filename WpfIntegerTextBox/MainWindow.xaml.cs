@@ -35,5 +35,23 @@ namespace WpfIntegerTextBox
             set { SetValue(NumberProperty, value); }
         }
 
+        public static readonly DependencyProperty MaxProperty = DependencyProperty.Register(
+            "Max", typeof (int), typeof (MainWindow), new PropertyMetadata(default(int)));
+
+        public int Max
+        {
+            get { return (int) GetValue(MaxProperty); }
+            set { SetValue(MaxProperty, value); }
+        }
+
+        public static readonly DependencyProperty MinProperty = DependencyProperty.Register(
+            "Min", typeof (int), typeof (MainWindow), new PropertyMetadata(default(int)));
+
+        public int Min
+        {
+            get { return (int) GetValue(MinProperty); }
+            set { SetValue(MinProperty, value); }
+        }
+
     }
 }

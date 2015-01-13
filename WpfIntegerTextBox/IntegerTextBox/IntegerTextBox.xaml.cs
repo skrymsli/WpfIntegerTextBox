@@ -24,6 +24,14 @@ namespace WpfIntegerTextBox.IntegerTextBox
         public IntegerTextBox()
         {
             InitializeComponent();
+
+            TextBox.LostFocus += TextBox_LostFocus;
+        }
+
+        void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (Validation.GetHasError(TextBox)) return;
+            ConstrainValue();
         }
 
         public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register(
@@ -45,7 +53,7 @@ namespace WpfIntegerTextBox.IntegerTextBox
         }
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            "Value", typeof(int), typeof(IntegerTextBox), new PropertyMetadata(default(int), null, CoerceMinMax));
+            "Value", typeof(int), typeof(IntegerTextBox), new PropertyMetadata(default(int), null, CoerceValueCallback));
 
         public int Value
         {
@@ -53,15 +61,19 @@ namespace WpfIntegerTextBox.IntegerTextBox
             set { SetValue(ValueProperty, value); }
         }
 
-        private static object CoerceMinMax(DependencyObject d, object value)
+        static object CoerceValueCallback(DependencyObject obj, object value)
         {
-            var This = d as IntegerTextBox;
+            var This = obj as IntegerTextBox;
             if (This == null) return value;
 
-            var thisValue = (int) value;
-            if (thisValue < This.MinValue)
-                return This.MinValue;
-            return thisValue > This.MaxValue ? This.MaxValue : value;
+            return (int) value > This.MaxValue ? This.MaxValue : value;
+        }
+
+        void ConstrainValue()
+        {
+            if (Value < MinValue)
+                Value = MinValue;
+            if (Value > MaxValue) Value = MaxValue;
         }
 
         public static readonly DependencyProperty EmptyStringBehaviorProperty = DependencyProperty.Register(

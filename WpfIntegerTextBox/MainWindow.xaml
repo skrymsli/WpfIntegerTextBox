@@ -27,6 +27,13 @@
             </StackPanel>
             <integerTextBox:IntegerTextBox x:Name="Foo2" Width="300" Value="{Binding ElementName=Root, Path=Number}" MinValue="50" MaxValue="100"  EmptyStringBehavior="UseZero"/>
         </StackPanel>
+        
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <integerTextBox:IntegerTextBox x:Name="tb" Width="50" Value="{Binding Max, Mode=TwoWay}" MinValue="10" MaxValue="200"></integerTextBox:IntegerTextBox>
+                <Slider Width="200" Value="{Binding Max, Mode=TwoWay}" Minimum="{Binding ElementName=tb, Path=MinValue}" Maximum="{Binding ElementName=tb, Path=MaxValue}" ></Slider>
+            </StackPanel>
+        </StackPanel>
         <Button>Hi!</Button>
     </StackPanel>
 </Window>
